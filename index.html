@@ -270,7 +270,7 @@
             gap: 24px;
             padding: 20px 40px;
             overflow-x: auto;
-            scroll-behavior: smooth;
+            /* scroll-behavior: smooth; REMOVED to fix JS auto-scroll conflict */
             -ms-overflow-style: none;
             scrollbar-width: none;
             cursor: grab;
@@ -692,7 +692,7 @@
         });
 
         // Auto scroll for ambiance - improved version
-        let autoScrollSpeed = 0.4;
+        let autoScrollSpeed = 1;
         let autoScrollActive = true;
         let scrollDirection = 1;
 
@@ -716,10 +716,10 @@
         scroller.addEventListener('mouseleave', () => {
             autoScrollActive = true;
         });
-        scroller.addEventListener('touchstart', () => autoScrollActive = false);
+        scroller.addEventListener('touchstart', () => autoScrollActive = false, { passive: true });
         scroller.addEventListener('touchend', () => {
             setTimeout(() => autoScrollActive = true, 1000);
-        });
+        }, { passive: true });
 
         // Start auto scroll after a delay
         setTimeout(() => autoScroll(), 1500);
