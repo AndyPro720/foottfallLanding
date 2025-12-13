@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foottfall - Transforming Spaces</title>
+    <title>Foottfall - Brands x Locations</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/favicon.png">
 
@@ -21,7 +21,7 @@
             --accent: #1a1a1a;
             --card-bg: #f8f9fa;
             --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-            --card-hover-shadow: 0 30px 50px rgba(0, 0, 0, 0.12);
+            --card-hover-shadow: 0 30px 50px rgba(12, 126, 31, 0.511);
         }
 
         * {
@@ -113,13 +113,13 @@
             width: 600px;
             /* Large to compensate for whitespace in image */
             margin-bottom: 4px;
+            margin-top: 16px;
         }
 
         .logo-img {
             width: 100%;
             height: auto;
             display: block;
-            filter: brightness(0);
         }
 
         .tagline {
@@ -162,6 +162,11 @@
             opacity: 0;
             animation: fadeInUp 1s 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             max-width: 800px;
+            transition: text-shadow 0.3s ease;
+        }
+
+        .hero-title:hover {
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
         }
 
         .hero-text {
@@ -373,7 +378,7 @@
         }
 
         .contact-link:hover {
-            background: var(--accent);
+            background: rgba(7, 78, 19, 0.909);
             color: #ffffff;
             transform: translateY(-2px);
         }
@@ -436,60 +441,327 @@
             }
         }
 
-        /* Loading Animation */
+        /* Map Pin to Storefront Morph Animation */
         .loading-animation {
+            width: 140px;
+            height: 120px;
+            position: relative;
             display: flex;
-            gap: 6px;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
+            margin: 0 auto 2rem auto;
+            perspective: 1000px;
+        }
+
+        .map-base {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
             height: 60px;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center bottom;
+            transform: rotateX(60deg);
+            transform-origin: center bottom;
+            opacity: 0;
+            animation: mapFade 4s infinite ease-in-out;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.5);
+            /* Added for visibility */
         }
 
-        .bar {
-            width: 6px;
-            height: 30px;
-            background: #1a1a1a;
-            animation: construct 1.2s infinite ease-in-out;
-            border-radius: 2px;
-        }
-
-        .bar:nth-child(1) {
-            animation-delay: 0.0s;
-            height: 15px;
-        }
-
-        .bar:nth-child(2) {
-            animation-delay: 0.1s;
-            height: 25px;
-        }
-
-        .bar:nth-child(3) {
-            animation-delay: 0.2s;
+        .morph-obj {
+            width: 40px;
             height: 40px;
+            background: #1a1a1a;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 20px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg) translateY(-100px);
+            animation: pinAction 4s infinite ease-in-out;
         }
 
-        .bar:nth-child(4) {
-            animation-delay: 0.3s;
-            height: 20px;
+        .morph-obj::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ffffff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: holeHide 4s infinite;
         }
 
-        .bar:nth-child(5) {
-            animation-delay: 0.4s;
-            height: 10px;
+        .morph-obj::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 55%;
+            transform: translate(-50%, -50%) scaleX(0);
+            width: 60%;
+            height: 40%;
+            background: #a8d5e2;
+            /* Window Glass */
+            border: 2px solid #34495e;
+            opacity: 0;
+            animation: windowAppear 4s infinite ease-out;
         }
 
-        @keyframes construct {
+        .store-details {
+            position: absolute;
+            bottom: 20px;
+            width: 80px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .awning {
+            position: absolute;
+            top: -12px;
+            width: 100%;
+            height: 12px;
+            background: repeating-linear-gradient(90deg, #ef4444 0, #ef4444 10px, #ffffff 10px, #ffffff 20px);
+            /* Red & White */
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform-origin: top;
+            transform: scaleY(0);
+            opacity: 0;
+            animation: awningPop 4s infinite cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .awning::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 10px, #ffffff 10px, #ffffff 12px);
+            opacity: 0.2;
+        }
+
+        .door {
+            width: 24px;
+            height: 32px;
+            background: #ffffff;
+            border: 2px solid #1a1a1a;
+            border-bottom: none;
+            transform-origin: bottom;
+            transform: scaleY(0);
+            opacity: 0;
+            animation: doorPop 4s infinite ease-out;
+        }
+
+        .check-mark {
+            position: absolute;
+            top: -45px;
+            font-size: 24px;
+            color: #4ade80;
+            opacity: 0;
+            transform: scale(0);
+            animation: checkBounce 4s infinite cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes mapFade {
 
             0%,
-            100% {
-                transform: scaleY(1);
-                opacity: 0.3;
+            5% {
+                opacity: 0;
+                transform: rotateX(60deg) scale(0.8);
             }
 
-            50% {
-                transform: scaleY(1.5);
+            10%,
+            90% {
                 opacity: 1;
+                transform: rotateX(60deg) scale(1);
             }
+
+            100% {
+                opacity: 0;
+                transform: rotateX(60deg) scale(0.8);
+            }
+        }
+
+        @keyframes pinAction {
+
+            /* 1. Drop: Ease-In (Accelerate to ground) */
+            0% {
+                transform: translateY(-120px) rotate(-45deg);
+                border-radius: 50% 50% 50% 0;
+                width: 40px;
+                height: 40px;
+                background: #ef4444;
+                animation-timing-function: ease-in;
+            }
+
+            /* 2. Land - Stick immediately */
+            15% {
+                transform: translateY(0) rotate(-45deg);
+                background: #ef4444;
+                border-radius: 50% 50% 50% 0;
+                width: 40px;
+                height: 40px;
+            }
+
+            /* 3. Morph to Box (In place) */
+            20% {
+                transform: translateY(0) rotate(0deg);
+                border-radius: 4px;
+                width: 40px;
+                height: 40px;
+                background: #2c3e50;
+            }
+
+            /* 4. Expand to Store - Faster (30-60% Expansion phase) */
+            30%,
+            60%,
+            90% {
+                transform: translateY(0) rotate(0deg);
+                border-radius: 4px;
+                width: 90px;
+                height: 55px;
+                background: #2c3e50;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Disappear */
+            95%,
+            100% {
+                transform: translateY(0) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes windowAppear {
+
+            0%,
+            30% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scaleX(0);
+            }
+
+            35%,
+            60%,
+            90% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scaleX(1);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes holeHide {
+
+            0%,
+            15% {
+                display: block;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            20%,
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+        }
+
+        @keyframes awningPop {
+
+            0%,
+            30% {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+
+            35%,
+            60%,
+            90% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes doorPop {
+
+            0%,
+            35% {
+                opacity: 0;
+                transform: scaleY(0);
+            }
+
+            40%,
+            60%,
+            90% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes checkBounce {
+
+            0%,
+            50% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            55%,
+            60%,
+            90% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Card Images */
+        .card-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
+            /* Take up top portion */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            /* Behind number */
+            pointer-events: none;
+            opacity: 0.8;
+            padding: 20px;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
         }
 
         /* Responsive */
@@ -566,27 +838,31 @@
         <!-- Page 1: Hero -->
         <div class="page-section">
             <header>
+                <br> <br>
                 <div class="container" style="display: flex; flex-direction: column; align-items: center;">
                     <div class="logo-container">
-                        <img src="assets/Black logo.png" alt="Foottfall" class="logo-img">
+                        <img src="assets/logo.png" alt="Foottfall" class="logo-img">
                     </div>
-                    <p class="tagline">Transforming spaces into experiences</p>
+                    <p class="tagline">Brands x Locations</p>
                 </div>
             </header>
 
             <section class="hero">
                 <div class="container">
                     <div class="loading-animation">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
+                        <div class="map-base"></div>
+                        <div class="morph-obj"></div>
+                        <div class="store-details">
+                            <div class="awning"></div>
+                            <div class="door"></div>
+                            <div class="check-mark">✓</div>
+                        </div>
                     </div>
                     <h1 class="hero-title" style="display: flex; flex-direction: column; align-items: center;">Building
                         Something<br>Extraordinary</h1>
-                    <p class="hero-text">We are crafting the future of retail and lifestyle destinations. A new digital
-                        experience is currently under construction.</p>
+
+                    <p class="hero-text">Stay Tuned</p>
+
                     <div class="progress-line"></div>
                     <div class="scroll-indicator">
                         <span>Scroll</span>
@@ -608,33 +884,52 @@
                 </div>
                 <div class="scroller-track" id="scroller">
                     <!-- Cards -->
+
                     <div class="card">
                         <span class="card-number">01</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_restaurant.png" alt="Restaurants" class="card-image">
+                        </div>
                         <h3 class="card-title">Restaurants<br>& QSRs</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">02</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_wellness.png" alt="Wellness" class="card-image">
+                        </div>
                         <h3 class="card-title">Wellness<br>& Grooming</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">03</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_fitness.png" alt="Fitness" class="card-image">
+                        </div>
                         <h3 class="card-title">Fitness<br>& Lifestyle</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">04</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_entertainment.png" alt="Entertainment" class="card-image">
+                        </div>
                         <h3 class="card-title">Entertainment<br>+ F&B</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">05</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_gaming.png" alt="Gaming" class="card-image">
+                        </div>
                         <h3 class="card-title">Gaming<br>& Social Play</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">06</span>
+                        <div class="card-image-container">
+                            <img src="assets/card_nightlife.png" alt="Nightlife" class="card-image">
+                        </div>
                         <h3 class="card-title">Nightlife<br>& Live Events</h3>
                         <div class="card-line"></div>
                     </div>
@@ -647,10 +942,7 @@
                     <div class="footer-content">
                         <div class="locations">
                             <div class="location-item">
-                                <span>🇮🇳</span> India
-                            </div>
-                            <div class="location-item">
-                                <span>🇦🇪</span> UAE
+                                India / UAE
                             </div>
                         </div>
                         <a href="mailto:business@foottfall.com" class="contact-link">business@foottfall.com</a>
