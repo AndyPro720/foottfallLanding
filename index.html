@@ -13,6 +13,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
             --primary-bg: #ffffff;
@@ -98,6 +99,7 @@
             position: relative;
         }
 
+        /* Updated Header/Logo Styles */
         header {
             padding: 5px 0 7px;
             display: flex;
@@ -110,10 +112,407 @@
         }
 
         .logo-container {
-            width: 600px;
-            /* Large to compensate for whitespace in image */
-            margin-bottom: 4px;
-            margin-top: 16px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 90px;
+            position: relative;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            transform: scale(1.3);
+            /* Adjusted to fit header better */
+        }
+
+        /* Animation specific styles */
+        .wrapper-ref {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .letter-slot {
+            width: 55px;
+            height: 90px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .final-letter {
+            font-weight: 900;
+            font-size: 72px;
+            line-height: 72px;
+            letter-spacing: -2px;
+            color: #022c22;
+            opacity: 0;
+            position: absolute;
+            bottom: 10px;
+            z-index: 20;
+        }
+
+        .slot-o1 {
+            margin-right: 4px;
+        }
+
+        .slot-o2 {
+            margin-left: 4px;
+        }
+
+        .slot-t1 {
+            margin-right: -10px;
+            z-index: 21;
+        }
+
+        .slot-t2 {
+            margin-left: -5px;
+        }
+
+        .slot-l1 {
+            margin-right: -12px;
+            z-index: 21;
+        }
+
+        .slot-l2 {
+            margin-left: 0px;
+            z-index: 20;
+        }
+
+        /* L1 Configuration */
+        .l1-custom-shape {
+            position: absolute;
+            bottom: 22px;
+            left: 14px;
+            width: 70px;
+            height: 52px;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .l1-v-bar {
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+            width: 16px;
+            height: 100%;
+            background-color: #022c22;
+        }
+
+        .l1-h-bar {
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+            width: 100%;
+            height: 14px;
+            background-color: #022c22;
+        }
+
+        /* L2 Forklift Mechanism */
+        .l2-forklift-mechanism {
+            position: absolute;
+            bottom: 44px;
+            left: 10px;
+            width: 50px;
+            height: 60px;
+            opacity: 0;
+            overflow: visible;
+        }
+
+        .l2-vertical-stem {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 16px;
+            height: 30px;
+            background-color: #022c22;
+        }
+
+        .l2-forks {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 6px;
+            background-color: #d97706;
+            border-radius: 0 0 2px 0;
+        }
+
+        .shop-block {
+            position: absolute;
+            bottom: 6px;
+            left: 18px;
+            width: 22px;
+            height: 22px;
+            background: #d97706;
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 30;
+        }
+
+        .shop-roof {
+            position: absolute;
+            top: -5px;
+            width: 0;
+            height: 0;
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-bottom: 5px solid #d97706;
+        }
+
+        .shop-door {
+            width: 7px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            margin-top: 6px;
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* F Scanner */
+        .f-scanner-box {
+            position: absolute;
+            bottom: 10px;
+            width: 40px;
+            height: 72px;
+            opacity: 0;
+        }
+
+        .f-outline {
+            font-weight: 900;
+            font-size: 72px;
+            line-height: 72px;
+            letter-spacing: -2px;
+            -webkit-text-stroke: 1.5px rgba(21, 128, 61, 0.4);
+            color: transparent;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .scan-line {
+            width: 100%;
+            height: 3px;
+            background: #15803d;
+            box-shadow: 0 0 10px rgba(21, 128, 61, 0.6);
+            position: absolute;
+            top: 0;
+        }
+
+        /* OO People */
+        .person-shape {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+        }
+
+        .p-head {
+            width: 14px;
+            height: 14px;
+            background: #15803d;
+            border-radius: 50%;
+            margin-bottom: 2px;
+        }
+
+        .p-body {
+            width: 22px;
+            height: 26px;
+            background: #15803d;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .match-flash {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #15803d;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        /* TT Map Block */
+        .map-block-container {
+            position: absolute;
+            left: -30px;
+            width: 85px;
+            height: 70px;
+            bottom: 10px;
+            opacity: 0;
+            z-index: 25;
+            background: #ffffff;
+            border: 2px solid #14532d;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.15);
+        }
+
+        .map-road {
+            position: absolute;
+            background: #cbd5e1;
+        }
+
+        .road-1 {
+            width: 100%;
+            height: 6px;
+            top: 30%;
+            transform: rotate(5deg);
+        }
+
+        .road-2 {
+            width: 100%;
+            height: 5px;
+            bottom: 30%;
+            transform: rotate(-5deg);
+        }
+
+        .road-3 {
+            width: 6px;
+            height: 100%;
+            left: 40%;
+        }
+
+        .road-4 {
+            width: 5px;
+            height: 100%;
+            right: 25%;
+            transform: rotate(15deg);
+        }
+
+        .map-pin-small {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #14532d;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        /* FA Analytics */
+        .graph-group {
+            position: absolute;
+            bottom: 18px;
+            left: 5px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 50px;
+            opacity: 0;
+        }
+
+        .g-bar {
+            width: 7px;
+            background: #15803d;
+            border-radius: 2px 2px 0 0;
+            height: 0;
+        }
+
+        .network-group {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+        .n-node {
+            width: 8px;
+            height: 8px;
+            background: #15803d;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 2;
+        }
+
+        .n-line {
+            position: absolute;
+            height: 2px;
+            background: #94a3b8;
+            transform-origin: left center;
+            z-index: 1;
+        }
+
+        /* L Pin */
+        .pin-shape {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            width: 26px;
+            height: 38px;
+            opacity: 0;
+            transform-origin: bottom center;
+        }
+
+        .pin-head {
+            width: 26px;
+            height: 26px;
+            background: #0c3b04;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pin-dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        .pin-shadow {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 12px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+        }
+
+        /* Progress Bar */
+        .progress-wrap {
+            width: 300px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #15803d;
+            transition: width 0.1s linear;
         }
 
         .logo-img {
@@ -775,12 +1174,18 @@
             }
 
             .logo-container {
-                width: 180px;
-                margin-bottom: 12px;
+                /* Reset width/margin from previous mobile styles if any, and apply scale */
+                width: 100%;
+                margin-bottom: 0px;
+                transform: scale(0.7);
+                /* Smaller scale for mobile */
+                height: 70px;
+                /* Reduced height */
             }
 
             .tagline {
                 font-size: 0.85rem;
+                padding: 0 20px;
             }
 
             .hero {
@@ -789,13 +1194,14 @@
             }
 
             .hero-title {
-                font-size: 2.25rem;
-                margin: 20px 0;
+                font-size: 2rem;
+                margin: 10px 0 20px;
             }
 
             .hero-text {
                 font-size: 1rem;
                 padding: 0 10px;
+                line-height: 1.5;
             }
 
             .showcase {
@@ -840,27 +1246,131 @@
             <header>
                 <br> <br>
                 <div class="container" style="display: flex; flex-direction: column; align-items: center;">
-                    <div class="logo-container">
-                        <img src="assets/logo.png" alt="Foottfall" class="logo-img">
+
+                    <!-- NEW LOGO ANIMATION CONTAINER -->
+                    <div class="wrapper-ref">
+                        <div class="logo-container">
+
+                            <!-- F -->
+                            <div class="letter-slot slot-f">
+                                <div class="f-scanner-box">
+                                    <div class="f-outline">F</div>
+                                    <div class="scan-line"></div>
+                                </div>
+                                <div class="final-letter">F</div>
+                            </div>
+
+                            <!-- OO -->
+                            <div class="letter-slot slot-o1">
+                                <div class="person-shape p1" style="left: 10px;">
+                                    <div class="p-head"></div>
+                                    <div class="p-body"></div>
+                                </div>
+                                <div class="final-letter">O</div>
+                            </div>
+                            <div class="letter-slot slot-o2">
+                                <div class="person-shape p2" style="right: 10px;">
+                                    <div class="p-head"></div>
+                                    <div class="p-body"></div>
+                                </div>
+                                <div class="match-flash"></div>
+                                <div class="final-letter">O</div>
+                            </div>
+
+                            <!-- TT -->
+                            <div class="letter-slot slot-t1">
+                                <div class="final-letter t1-static" style="opacity: 0;">T</div>
+                            </div>
+                            <div class="letter-slot slot-t2">
+                                <div class="map-block-container">
+                                    <div class="map-road road-1"></div>
+                                    <div class="map-road road-2"></div>
+                                    <div class="map-road road-3"></div>
+                                    <div class="map-road road-4"></div>
+                                    <div class="map-pin-small" style="top: 20px; left: 30px;"></div>
+                                    <div class="map-pin-small" style="bottom: 25px; right: 35px;"></div>
+                                    <div class="map-pin-small" style="top: 15px; right: 20px;"></div>
+                                </div>
+                                <div class="final-letter t2-static" style="opacity: 0;">T</div>
+                            </div>
+
+                            <div class="letter-slot slot-f2">
+                                <div class="graph-group">
+                                    <div class="g-bar"></div>
+                                    <div class="g-bar"></div>
+                                    <div class="g-bar"></div>
+                                    <div class="g-bar"></div>
+                                </div>
+                                <div class="final-letter">F</div>
+                            </div>
+                            <div class="letter-slot slot-a">
+                                <div class="network-group">
+                                    <div class="n-node node1" style="bottom: 15px; left: 10px;"></div>
+                                    <div class="n-node node2" style="bottom: 40px; left: 25px;"></div>
+                                    <div class="n-node node3" style="bottom: 20px; left: 40px;"></div>
+                                    <div class="n-line line1"
+                                        style="bottom: 18px; left: 14px; width: 22px; transform: rotate(-55deg);">
+                                    </div>
+                                    <div class="n-line line2"
+                                        style="bottom: 42px; left: 28px; width: 22px; transform: rotate(55deg);">
+                                    </div>
+                                </div>
+                                <div class="final-letter">A</div>
+                            </div>
+
+                            <!-- LL Custom Merge -->
+                            <div class="letter-slot slot-l1">
+                                <div class="pin-shape">
+                                    <div class="pin-head">
+                                        <div class="pin-dot"></div>
+                                    </div>
+                                </div>
+                                <div class="pin-shadow"></div>
+
+                                <!-- Custom L1 Shape (Base + Ext) -->
+                                <div class="l1-custom-shape">
+                                    <div class="l1-v-bar"></div>
+                                    <div class="l1-h-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="letter-slot slot-l2">
+                                <div class="l2-forklift-mechanism">
+                                    <div class="l2-vertical-stem"></div>
+                                    <div class="l2-forks"></div>
+
+                                    <!-- The Cargo: Shop Block sitting on forks -->
+                                    <div class="shop-block">
+                                        <div class="shop-roof"></div>
+                                        <div class="shop-door"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-wrap">
+                            <div class="progress-text">
+                                <span id="status-text">System Idle</span>
+                                <span id="percent-text">0%</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="tagline">Brands x Locations</p>
+
+
                 </div>
             </header>
 
             <section class="hero">
                 <div class="container">
-                    <div class="loading-animation">
-                        <div class="map-base"></div>
-                        <div class="morph-obj"></div>
-                        <div class="store-details">
-                            <div class="awning"></div>
-                            <div class="door"></div>
-                            <div class="check-mark">✓</div>
-                        </div>
-                    </div>
+
                     <h1 class="hero-title" style="display: flex; flex-direction: column; align-items: center;">Building
                         Something<br>Extraordinary</h1>
 
+                    <p class="hero-text">Curating spaces that people want to be in — with the brands that belong in
+                        them.</p>
                     <p class="hero-text">Stay Tuned</p>
 
                     <div class="progress-line"></div>
@@ -887,49 +1397,37 @@
 
                     <div class="card">
                         <span class="card-number">01</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_restaurant.png" alt="Restaurants" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Restaurants<br>& QSRs</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">02</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_wellness.png" alt="Wellness" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Wellness<br>& Grooming</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">03</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_fitness.png" alt="Fitness" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Fitness<br>& Lifestyle</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">04</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_entertainment.png" alt="Entertainment" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Entertainment<br>+ F&B</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">05</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_gaming.png" alt="Gaming" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Gaming<br>& Social Play</h3>
                         <div class="card-line"></div>
                     </div>
                     <div class="card">
                         <span class="card-number">06</span>
-                        <div class="card-image-container">
-                            <img src="assets/card_nightlife.png" alt="Nightlife" class="card-image">
-                        </div>
+
                         <h3 class="card-title">Nightlife<br>& Live Events</h3>
                         <div class="card-line"></div>
                     </div>
@@ -1042,6 +1540,120 @@
             section.style.opacity = '1';
             fadeObserver.observe(section);
         });
+
+        /* --- LOGO ANIMATION SCRIPT --- */
+        const statusEl = document.getElementById('status-text');
+        const percentEl = document.getElementById('percent-text');
+        const fillEl = document.querySelector('.progress-fill');
+
+        function setStatus(text, pct) {
+            gsap.fromTo(statusEl,
+                { color: "#15803d" },
+                { color: "#64748b", duration: 0.6 }
+            );
+
+            statusEl.innerText = text;
+
+            gsap.to(percentEl, {
+                innerText: pct,
+                duration: 0.8,
+                snap: { innerText: 1 },
+                onUpdate: function () {
+                    this.targets()[0].innerText = Math.ceil(this.targets()[0].innerText) + "%";
+                }
+            });
+
+            gsap.to(fillEl, {
+                width: pct + "%",
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        }
+
+        const tl = gsap.timeline({ delay: 0.5 });
+
+        // 1. SCANNING (F)
+        tl.add(() => setStatus("Scanning Urban Footprints", 15))
+            .to(".f-scanner-box", { opacity: 1, duration: 0.1 })
+            .fromTo(".scan-line", { top: "0%" }, { top: "100%", duration: 0.6, ease: "linear" })
+            .to(".f-outline", { opacity: 1, duration: 0.3 }, "<0.1")
+            .to(".f-scanner-box", { opacity: 0, duration: 0.2 })
+            .to(".slot-f .final-letter", { opacity: 1, duration: 0.2 }, "<");
+
+        // 2. CONNECTING PEOPLE (OO)
+        tl.add(() => setStatus("Scanning Trade Areas", 30))
+            .to([".p1", ".p2"], { opacity: 1, duration: 0.2 })
+            .to(".p1", { x: 15, duration: 0.4, ease: "back.in(1.5)" })
+            .to(".p2", { x: -15, duration: 0.4, ease: "back.in(1.5)" }, "<")
+            .to(".match-flash", { opacity: 1, scale: 1.2, duration: 0.1 })
+            .to([".p1", ".p2"], { opacity: 0, scale: 0.5, duration: 0.1 }, "<")
+            .to(".match-flash", { scale: 2, opacity: 0, duration: 0.2 })
+            .to([".slot-o1 .final-letter", ".slot-o2 .final-letter"], {
+                opacity: 1, scale: 1, duration: 0.3, stagger: 0.05, ease: "back.out(1.5)"
+            }, "-=0.1");
+
+        // 3. MAPPING TRADE AREAS (TT)
+        tl.add(() => setStatus("Mapping Brandscape", 45))
+            .to(".map-block-container", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.2)" })
+            .set([".t1-static", ".t2-static"], { y: 100, opacity: 1 })
+            // Faster exit
+            .to([".t1-static", ".t2-static"], { y: 0, duration: 0.5, ease: "power2.out" }, "+=0.3")
+            .to(".map-block-container", { y: -100, opacity: 0, duration: 0.5, ease: "power2.out" }, "<");
+
+        // 4. FETCHING ANALYTICS (FA)
+        tl.add(() => setStatus("Decoding Trade Area Intelligence", 60))
+            .to(".slot-f2 .final-letter", { opacity: 0, duration: 0.1 })
+            .to([".graph-group", ".network-group"], { opacity: 1, duration: 0.3 }, "<")
+            // Faster, punchier entry - but longer hold overall
+            .to(".g-bar", { height: (i) => [55, 60, 25, 45][i] + "px", duration: 0.6, stagger: 0.05, ease: "back.out(1.2)" }, "-=0.2")
+            // Nodes expand quickly, mimicking A shape points
+            .from(".n-node", { scale: 0, duration: 0.5, stagger: 0.05, ease: "back.out(1.5)" }, "<")
+            .from(".n-line", { scaleX: 0, duration: 0.5, stagger: 0.05 }, "<")
+
+            // Smooth Crossfade Transition (Transitioning "into" the letters)
+            // No Y movement, just a direct morph-like fade
+            .to([".graph-group", ".network-group"], { opacity: 0, scale: 1.1, duration: 0.3, ease: "power2.inOut", delay: 0.2 })
+            .to([".slot-f2 .final-letter", ".slot-a .final-letter"], { opacity: 1, scale: 1, startAt: { scale: 0.9 }, duration: 0.3, ease: "power2.out" }, "<");
+
+        // 5. GATHERING LOCATION (L1) & CURATING DATA (L2) - CUSTOM MERGE
+        tl.add(() => setStatus("Matching Profiles", 75))
+            // L1: Pin Drop THEN Text Drop - Faster
+            .to(".pin-shape", { opacity: 1, y: 0, startAt: { y: -80 }, duration: 0.4, ease: "bounce.out" })
+            .to(".pin-shadow", { opacity: 1, scale: 1, duration: 0.3 }, "-=0.3")
+
+            // L1 Base enters (dropping down) - Faster
+            .fromTo(".l1-custom-shape",
+                { y: -100, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2")
+
+            // Fade out Pin
+            .to(".pin-shape", { scale: 0, opacity: 0, duration: 0.2 })
+            .to(".pin-shadow", { opacity: 0, duration: 0.2 }, "<")
+
+        // 6. SCORING LOCATION OPPORTUNITY
+        tl.add(() => setStatus("Scoring Location Opportunity", 90))
+            // L2 MECHANISM ACTION - Faster
+            // The "L2 Forklift Mechanism" (Stem + Forks + Shop) Enters from Top
+            .fromTo(".l2-forklift-mechanism",
+                { y: -150, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, "-=0.2")
+
+            .to(".l2-forks", { width: 0, duration: 0.4, ease: "power2.in" }, "+=0.2")
+            .to(".shop-block", { opacity: 0, scale: 0.8, duration: 0.3 }, "<")
+
+            // Final Clean Up available if needed
+            .call(() => setStatus("Intelligence Engine Ready", 100));
+
+        // Final Pulse
+        tl.to([".final-letter", ".l1-custom-shape", ".l2-vertical-stem"], {
+            scale: 1.05,
+            duration: 1.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            stagger: 0.05
+        }, "+=0.5");
+
 
     </script>
 </body>
