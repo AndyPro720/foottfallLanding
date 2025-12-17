@@ -1244,7 +1244,7 @@
         <!-- Page 1: Hero -->
         <div class="page-section">
             <header>
-                <br> <br>
+                <br> <br> <br> <br>
                 <div class="container" style="display: flex; flex-direction: column; align-items: center;">
 
                     <!-- NEW LOGO ANIMATION CONTAINER -->
@@ -1366,11 +1366,8 @@
             <section class="hero">
                 <div class="container">
 
-                    <h1 class="hero-title" style="display: flex; flex-direction: column; align-items: center;">Building
-                        Something<br>Extraordinary</h1>
-
-                    <p class="hero-text">Curating spaces that people want to be in — with the brands that belong in
-                        them.</p>
+                    <h1 class="hero-title" style="display: flex; flex-direction: column; align-items: center;">The
+                        Market Is About to Speak</h1>
                     <p class="hero-text">Stay Tuned</p>
 
                     <div class="progress-line"></div>
@@ -1570,10 +1567,37 @@
             });
         }
 
-        const tl = gsap.timeline({ delay: 0.5 });
+
+        // Create the main timeline with loop and delay
+        // timeScale(0.6) slows the entire animation down (approx 40% slower)
+        const tl = gsap.timeline({
+            delay: 0.5,
+            repeat: -1,
+            repeatDelay: 0.5, // Reduced delay significantly (scales to ~0.8s)
+            defaults: { duration: 1 } // slightly longer default just in case
+        }).timeScale(0.6);
+
+        // Function to reset the UI at the start of each loop
+        function resetUI() {
+            gsap.set(fillEl, { width: "0%" });
+            percentEl.innerText = "0%";
+            statusEl.innerText = "System Idle";
+            statusEl.style.color = "#64748b";
+
+            // Explicitly reset elements to ensure clean loop start
+            gsap.set([
+                ".final-letter", ".l1-custom-shape", ".l2-forklift-mechanism",
+                ".f-scanner-box", ".map-block-container", ".graph-group", ".network-group",
+                ".pin-shape", ".pin-shadow", ".match-flash", ".p1", ".p2", ".t1-static", ".t2-static"
+            ], { clearProps: "all", opacity: 0 });
+
+            gsap.set(".l2-forks", { width: "40px" });
+            gsap.set(".shop-block", { opacity: 1, scale: 1 });
+        }
 
         // 1. SCANNING (F)
-        tl.add(() => setStatus("Scanning Urban Footprints", 15))
+        tl.call(resetUI) // Reset at start
+            .add(() => setStatus("Scanning Urban Footprints", 15))
             .to(".f-scanner-box", { opacity: 1, duration: 0.1 })
             .fromTo(".scan-line", { top: "0%" }, { top: "100%", duration: 0.6, ease: "linear" })
             .to(".f-outline", { opacity: 1, duration: 0.3 }, "<0.1")
@@ -1644,15 +1668,15 @@
             // Final Clean Up available if needed
             .call(() => setStatus("Intelligence Engine Ready", 100));
 
-        // Final Pulse
+        // Final Pulse (Faster)
         tl.to([".final-letter", ".l1-custom-shape", ".l2-vertical-stem"], {
             scale: 1.05,
-            duration: 1.5,
+            duration: 0.8, // Reduced from 1.5
             yoyo: true,
-            repeat: -1,
+            repeat: 1,
             ease: "sine.inOut",
             stagger: 0.05
-        }, "+=0.5");
+        }, "+=0.2"); // Reduced delay before pulse
 
 
     </script>
